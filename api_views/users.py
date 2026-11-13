@@ -56,16 +56,10 @@ def register_user():
         try:
             # validate the data are in the correct form
             jsonschema.validate(request_data, register_user_schema)
-            if 'admin' in request_data:
-                if request_data['admin']:
-                    admin = True
-                else:
-                    admin = False
-                user = User(username=request_data['username'], password=request_data['password'],
-                            email=request_data['email'], admin=admin)
-            else:
-                user = User(username=request_data['username'], password=request_data['password'],
-                            email=request_data['email'])
+            # Mitigacion V4: Se ignora el parametro 'admin' del payload (Deny-by-default)
+            user = User(username=request_data['username'], password=request_data['password'],
+                        email=request_data['email'])
+            
             db.session.add(user)
             db.session.commit()
 
