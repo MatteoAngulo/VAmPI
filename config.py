@@ -10,7 +10,15 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(vuln_app.app.root_path, 'd
 vuln_app.app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 vuln_app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-vuln_app.app.config['SECRET_KEY'] = 'random'
+jwt_secret = os.environ.get("JWT_SECRET_KEY")
+
+if not jwt_secret:
+    raise RuntimeError(
+        "La variable JWT_SECRET_KEY no está configurada"
+    )
+
+vuln_app.app.config["SECRET_KEY"] = jwt_secret
+
 # start the db
 db = SQLAlchemy(vuln_app.app)
 
